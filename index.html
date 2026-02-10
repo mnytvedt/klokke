@@ -225,13 +225,15 @@
 
     function timeToDigital(h, m) {
       let hh;
-      if (h === 12) {
-        // h=12 blir kun 12:xx, ikke 00:xx (midnatt)
-        hh = 12;
+      if (h >= 1 && h <= 5) {
+        // h=1-5 skal ALLTID være ettermiddag/kveld (13-17)
+        hh = h + 12;
+      } else if (h >= 6 && h <= 11) {
+        // h=6-11 kan være morgen eller kveld
+        hh = (Math.random() < 0.5) ? h : (h + 12);
       } else {
-        // h=1-11 kan være enten morgen eller ettermiddag/kveld
-        if (Math.random() < 0.5) hh = h + 12;
-        else hh = h;
+        // h=12 skal være 12 (middag)
+        hh = 12;
       }
       const label = `${String(hh).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
       return label;
