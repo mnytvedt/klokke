@@ -591,11 +591,21 @@
           onRoundSolved();
         }
       } else {
-        // Feil svar - nullstill alt etter kort delay
+        // Feil svar - nullstill hele runden!
         [analog, digital, text].forEach(el => { el.classList.add('wrong'); });
         setTimeout(() => {
+          // Fjern "correct" fra alle kortene
+          $$('.card.correct').forEach(el => {
+            el.classList.remove('correct');
+            el.removeAttribute('aria-disabled');
+            el.style.pointerEvents = 'auto';
+          });
+          // Fjern "selected" og "wrong" fra de gjeldende kortene
           [analog, digital, text].forEach(el => { el.classList.remove('wrong'); el.classList.remove('selected'); });
+          // Nullstill alt
           state.selected = { analog: null, digital: null, text: null };
+          state.solvedCount = 0;
+          $('#progressCount').textContent = '0';
         }, 350);
       }
     }
