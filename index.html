@@ -224,9 +224,16 @@
     }
 
     function timeToDigital(h, m) {
-      let hh = h, label;
-      if (Math.random() < 0.5) hh = (hh === 12) ? 0 : hh + 12;
-      label = `${String(hh).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+      let hh;
+      if (h === 12) {
+        // h=12 blir kun 12:xx, ikke 00:xx (midnatt)
+        hh = 12;
+      } else {
+        // h=1-11 kan være enten morgen eller ettermiddag/kveld
+        if (Math.random() < 0.5) hh = h + 12;
+        else hh = h;
+      }
+      const label = `${String(hh).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
       return label;
     }
 
