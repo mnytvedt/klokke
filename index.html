@@ -3,42 +3,43 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>KlokkeMatch – lær klokka</title>
+  <title>KlokkeMatch – lær å lese klokka</title>
   <style>
     :root{
-      --bg:#0f172a; /* slate-900 */
-      --panel:#111827; /* gray-900 */
-      --panel-2:#1f2937; /* gray-800 */
-      --accent:#22c55e; /* green-500 */
-      --accent-2:#3b82f6; /* blue-500 */
-      --text:#e5e7eb; /* gray-200 */
-      --muted:#9ca3af; /* gray-400 */
-      --danger:#ef4444; /* red-500 */
-      --warn:#f59e0b; /* amber-500 */
+      --bg:#F8F9FA; /* lysegrå */
+      --panel:#FFFFFF; /* hvit */
+      --panel-2:#F0F2F5; /* letra hvit */
+      --accent:#FF6B35; /* varmt orange */
+      --accent-2:#004E89; /* mørk blå */
+      --text:#1a1a1a; /* svart */
+      --muted:#666666; /* grå */
+      --danger:#E63946; /* rød */
+      --warn:#F77F00; /* dypere orange */
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background: linear-gradient(180deg, var(--bg), #0b1220 40%, #0b1220 100%);
+      margin:0; font-family: "Segoe UI", "Arial Rounded MT Bold", system-ui;
+      background: var(--bg);
       color:var(--text);
       min-height:100vh; display:flex; flex-direction:column;
       -webkit-tap-highlight-color: transparent;
     }
     header{
-      padding:16px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; border-bottom:1px solid #1f2937;
-      background:rgba(0,0,0,0.2); backdrop-filter: blur(6px); position:sticky; top:0; z-index:5;
+      padding:16px 20px; display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap; border-bottom:2px solid #E0E0E0;
+      background:var(--panel); position:sticky; top:0; z-index:5; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
-    h1{font-size:clamp(20px, 2.6vw, 28px); margin:0; font-weight:800; letter-spacing:0.2px}
-    .sub{color:var(--muted); font-size:12px}
+    h1{font-size:clamp(24px, 5vw, 40px); margin:0; font-weight:900; letter-spacing:1px; color:var(--accent-2)}
+    .sub{color:var(--text); font-size:14px; font-weight:bold}
 
-    button{appearance:none; border:none; background:var(--accent-2); color:white; padding:12px 16px; border-radius:12px; cursor:pointer; font-weight:800; box-shadow: 0 4px 14px rgba(59,130,246,.25); font-size:16px}
-    button.ghost{background:transparent; border:2px solid #334155; color:var(--text)}
-    button.small{padding:10px 12px; font-size:14px; border-radius:10px}
+    button{appearance:none; border:none; background:var(--accent-2); color:white; padding:14px 20px; border-radius:12px; cursor:pointer; font-weight:900; box-shadow: 0 4px 12px rgba(0,78,137,0.2); font-size:16px; font-family: "Segoe UI", system-ui; transition: all 0.2s}
+    button:active{transform:scale(0.95); box-shadow: 0 2px 6px rgba(0,78,137,0.15)}
+    button.ghost{background:transparent; border:2px solid var(--accent-2); color:var(--accent-2)}
+    button.small{padding:12px 14px; font-size:14px; border-radius:10px; border:none}
     button.success{background:var(--accent)}
     button.warn{background:var(--warn)}
     button.danger{background:var(--danger)}
-    button:disabled{opacity:.6}
+    button:disabled{opacity:.4; cursor:not-allowed}
 
     .levels{display:flex; gap:8px; flex-wrap:wrap}
     .level-btn{background:var(--panel-2); border:1px solid #334155; color:var(--text); padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:700}
@@ -49,94 +50,101 @@
     .chip{background:#0b1220; border:1px solid #334155; padding:10px 12px; border-radius:999px; font-weight:800; color:var(--text); font-size:14px}
     .chip .muted{color:var(--muted); font-weight:700}
 
-    main{padding:18px; flex:1; display:none; flex-direction:column; gap:16px}
-    .grid{display:grid; grid-template-columns: repeat(3, minmax(220px, 1fr)); gap:16px; align-items:start}
-    .col{background:var(--panel); border:1px solid #1f2937; border-radius:16px; padding:14px}
-    .col h3{margin:0 0 8px 0; font-size:18px; font-weight:900; color:#e2e8f0; letter-spacing:.3px}
-    .col .cards{display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap:12px}
-    .card{background:linear-gradient(180deg, #0c1424, #0b1220); border:2px solid #22304a; border-radius:14px; padding:12px; display:flex; align-items:center; justify-content:center; gap:8px; min-height:150px; cursor:pointer; position:relative; overflow:hidden}
-    .card .label{font-size:24px; font-weight:900; text-align:center}
-    .card canvas{width:128px; height:128px}
-    .card.selected{outline:3px solid var(--accent-2)}
-    .card.correct{outline:3px solid var(--accent); filter:saturate(1.3)}
+    main{padding:16px; flex:1; display:none; flex-direction:column; gap:12px}
+    .grid{display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; align-items:start; max-width:900px; margin:0 auto; width:100%}
+    .col{background:var(--panel-2); border:2px solid var(--accent-2); border-radius:12px; padding:12px}
+    .col h3{margin:0 0 10px 0; font-size:18px; font-weight:900; color:var(--accent-2); letter-spacing:0px; text-align:center}
+    .col .cards{display:grid; grid-template-columns: 1fr; gap:10px}
+    .card{background:var(--panel); border:3px solid var(--accent-2); border-radius:12px; padding:10px; display:flex; align-items:center; justify-content:center; gap:8px; min-height:90px; cursor:pointer; position:relative; overflow:hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); transition: all 0.1s}
+    .card .label{font-size:16px; font-weight:900; text-align:center; color:var(--text)}
+    .card canvas{width:90px; height:90px}
+    .card.selected{outline:4px solid var(--accent); outline-offset:2px; background:#FFF8F0}
+    .card.correct{outline:4px solid var(--accent); background:#E8F5E9; border-color:var(--accent); animation: popCorrect 0.3s}
     .card.wrong{animation: shake .3s ease-in-out}
     @keyframes shake{0%{transform:translateX(0)} 25%{transform:translateX(-6px)} 50%{transform:translateX(6px)} 75%{transform:translateX(-3px)} 100%{transform:translateX(0)}}
+    @keyframes popCorrect{0%{transform:scale(1)} 50%{transform:scale(1.05)} 100%{transform:scale(1)}}
 
-    .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+    .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center}
     .spacer{flex:1}
 
-    .note{font-size:14px; color:var(--muted)}
+    .note{font-size:14px; color:var(--muted); font-weight:600; text-align:center}
 
-    .footer{padding:14px 18px; border-top:1px solid #1f2937; display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:rgba(0,0,0,0.2)}
+    .footer{padding:12px 16px; border-top:2px solid #E0E0E0; display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--panel); justify-content:center; font-size:14px; color:var(--muted)}
 
     /* Modal */
-    .modal-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:50}
-    .modal{background:var(--panel); border:1px solid #1f2937; border-radius:16px; padding:16px; width:min(720px, 94vw);}
-    .modal h2{margin:0 0 8px 0}
-    .row{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
-    .field{display:flex; flex-direction:column; gap:6px}
-    label{font-size:14px; color:var(--muted); font-weight:700}
-    input[type="number"], select{background:#0b1220; color:var(--text); border:2px solid #334155; border-radius:10px; padding:10px 12px; font-size:16px}
-    .modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:12px}
+    .modal-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.3); display:none; align-items:center; justify-content:center; z-index:50}
 
-    .legend{font-size:13px; color:var(--muted)}
+    .legend{font-size:14px; color:var(--muted); font-weight:600}
 
-    /* --- iPad-vennlig meny --- */
-    .menu-screen{display:flex; flex-direction:column; gap:16px; padding:24px}
-    .menu-title{font-size:32px; font-weight:900; text-align:center; margin:0; color:#e5e7eb}
-    .menu-grid{display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap:16px; padding:6px}
-    .menu-card{background:#1e293b; border:2px solid #334155; border-radius:16px; padding:22px; color:#e2e8f0; font-size:20px; font-weight:900; cursor:pointer; user-select:none; transition:.15s; min-height:100px; display:flex; align-items:center; justify-content:center; text-align:center}
-    .menu-card:active{transform:scale(.98)}
-    .menu-card.locked{opacity:.45; cursor:not-allowed}
-    .menu-card.completed{border-color:#22c55e; background:#152a1d}
+    /* --- Barnevennlig meny --- */
+    .menu-screen{display:flex; flex-direction:column; gap:16px; padding:20px; align-items:center}
+    .menu-title{font-size:36px; font-weight:900; text-align:center; margin:0; color:var(--accent-2)}
+    .menu-grid{display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:14px; padding:6px; max-width:600px; width:100%}
+    .menu-card{background:var(--panel); border:3px solid var(--accent-2); border-radius:16px; padding:16px; color:var(--text); font-size:16px; font-weight:900; cursor:pointer; user-select:none; transition:all 0.2s; min-height:140px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; box-shadow: 0 4px 12px rgba(0,78,137,0.1)}
+    .menu-card:active{transform:scale(0.95)}
+    .menu-card.locked{opacity:.5; cursor:not-allowed; background:var(--panel-2); border-color:var(--muted)}
+    .menu-card.completed{background:linear-gradient(135deg, #E8F5E9, #F1F8E9); border-color:var(--accent); box-shadow: 0 4px 12px rgba(76,175,80,0.15)}
+    .menu-card canvas{width:80px; height:80px; margin-bottom:6px}
 
-    @media (max-width: 980px){
-      .grid{grid-template-columns: 1fr}
-      .col .cards{grid-template-columns: repeat(2, minmax(140px, 1fr))}
-      .card{min-height:128px}
-      .card canvas{width:108px; height:108px}
-      .menu-grid{grid-template-columns: repeat(2, 1fr)}
+    .interactive-clock-container{background:var(--panel); border:3px solid var(--accent-2); border-radius:16px; padding:16px; text-align:center; max-width:320px; box-shadow: 0 4px 12px rgba(0,78,137,0.1)}
+    .interactive-clock-container h3{margin:0 0 12px 0; color:var(--accent-2); font-size:18px; font-weight:900}
+    .interactive-clock-container canvas{border:2px solid var(--accent-2); border-radius:12px; display:block; margin:0 auto}
+    .clock-controls{display:flex; gap:10px; justify-content:center; margin-top:12px}
+    .clock-btn{padding:8px 12px; font-size:14px; background:var(--accent-2); border:none; color:white; border-radius:10px; cursor:pointer; font-weight:900}
+    .clock-btn:active{transform:scale(0.95)}
+
+    .round-indicator{font-size:18px; font-weight:900; color:var(--accent-2); padding:0 12px}
+
+    @media (max-width: 900px){
+      .grid{grid-template-columns: repeat(2, 1fr)}
     }
     @media (max-width: 600px){
+      h1{font-size:28px}
       .menu-grid{grid-template-columns: 1fr}
+      .grid{grid-template-columns: 1fr}
     }
   </style>
 </head>
 <body>
   <header>
     <div>
-      <h1>KlokkeMatch <span class="sub">– tekst • analog • digital (24‑t)</span></h1>
-      <div class="legend">Match én fra hver kolonne. Lås opp neste nivå ved å få alt riktig innen tidsfristen.</div>
-    </div>
-    <div class="status">
-      <div class="chip" title="Antall riktige / totalt"><span id="progressCount">0</span><span class="muted"> / </span><span id="progressTotal">0</span></div>
-      <div class="chip" title="Tid igjen"><span class="muted">⏱︎</span> <span id="timer">00:00</span></div>
-      <button class="small ghost" id="btnSettings" title="Innstillinger">⚙️ Innstillinger</button>
+      <h1>🕐 KlokkeMatch</h1>
     </div>
   </header>
 
-  <!-- iPad-vennlig meny -->
+  <!-- Barnevennlig meny med interaktiv klokke -->
   <section id="menuScreen" class="menu-screen">
     <h2 class="menu-title">Velg nivå</h2>
     <div id="levelMenu" class="menu-grid"></div>
+    
+    <div class="interactive-clock-container">
+      <h3>Lær klokka!</h3>
+      <canvas id="interactiveClock" width="180" height="180"></canvas>
+      <div class="clock-controls">
+        <button class="clock-btn" id="btnClockMinus">◀ Tilbake</button>
+        <button class="clock-btn" id="btnClockPlus">Fremover ▶</button>
+      </div>
+      <div style="margin-top:10px; font-size:18px; font-weight:900; color:var(--text)" id="clockTime">12:00</div>
+    </div>
   </section>
 
   <main id="game">
     <div class="toolbar">
-      <button id="btnBackMenu" class="ghost">◀︎ Til meny</button>
-      <button id="btnStart" class="success">Start nivå på nytt</button>
-      <button id="btnNext" class="ghost" disabled>Neste nivå ▶</button>
-      <span class="spacer"></span>
-      <span class="note">Tips: Trykk ett kort i hver kolonne for å lage en trio. Riktig trio blir grønn.</span>
+      <button id="btnStart" class="success">Start på nytt</button>
+      <span class="round-indicator" id="roundIndicator">Runde 1/3</span>
+    </div>
+    <div style="text-align:center">
+      <div class="note">Match kortene som hører sammen!</div>
+      <div style="margin-top:8px; font-size:18px; font-weight:900; color:var(--text)"><span id="progressCount">0</span> / <span id="progressTotal">0</span> ✅</div>
     </div>
 
     <div class="grid">
       <div class="col">
-        <h3>Analog klokke</h3>
+        <h3>Analog</h3>
         <div class="cards" id="colAnalog"></div>
       </div>
       <div class="col">
-        <h3>Digital klokke (24‑t)</h3>
+        <h3>Digital</h3>
         <div class="cards" id="colDigital"></div>
       </div>
       <div class="col">
@@ -147,369 +155,513 @@
   </main>
 
   <div class="footer">
-    <button id="btnResetProgress" class="danger small">Nullstill progresjon</button>
-    <span class="note">Alt lagres lokalt på enheten. Fungerer helt uten nett.</span>
+    <button id="btnBackMenu" class="ghost small">⏠ Tilbake til meny</button>
   </div>
-
-  <!-- Settings Modal -->
-  <div class="modal-backdrop" id="backdrop">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-      <h2 id="settingsTitle">Innstillinger</h2>
-      <div class="row">
-        <div class="field">
-          <label for="selSets">Antall trioer per nivå</label>
-          <select id="selSets">
-            <option value="4">4</option>
-            <option value="6" selected>6</option>
-            <option value="8">8</option>
-            <option value="10">10</option>
-          </select>
-        </div>
-      </div>
-      <h3>Tidsgrenser (sekunder)</h3>
-      <div class="row">
-        <div class="field"><label>Hele timer</label><input type="number" id="tHelt" min="10" max="600" value="60"></div>
-        <div class="field"><label>Halve timer</label><input type="number" id="tHalv" min="10" max="600" value="75"></div>
-      </div>
-      <div class="row">
-        <div class="field"><label>Kvart over/på</label><input type="number" id="tKvart" min="10" max="600" value="90"></div>
-        <div class="field"><label>10 over/på</label><input type="number" id="tTi" min="10" max="600" value="90"></div>
-      </div>
-      <div class="row">
-        <div class="field"><label>5 over/på</label><input type="number" id="tFem" min="10" max="600" value="90"></div>
-        <div class="field"><label>10-min varianter (inkl. halv)</label><input type="number" id="tTiHalv" min="10" max="600" value="100"></div>
-      </div>
-      <div class="row">
-        <div class="field"><label>5-min varianter (inkl. halv)</label><input type="number" id="tFemHalv" min="10" max="600" value="100"></div>
-        <div class="field"><label>Alle (blandet)</label><input type="number" id="tAlle" min="10" max="1200" value="140"></div>
-      </div>
-      <div class="modal-actions">
-        <button class="ghost" id="btnClose">Lukk</button>
-        <button class="success" id="btnSave">Lagre</button>
-      </div>
-    </div>
-  </div>
+</body>
 
   <script>
     // ---------- Verktøy ----------
     const $ = sel => document.querySelector(sel);
     const $$ = sel => Array.from(document.querySelectorAll(sel));
 
-    // Lokal lagring nøkler
-    const LS_PROGRESS = 'klokkematch_progress_v2';
-    const LS_SETTINGS = 'klokkematch_settings_v2';
-
+    const LS_PROGRESS = 'klokkematch_progress_v3';
     const HOURS_WORD = [null,'ett','to','tre','fire','fem','seks','sju','åtte','ni','ti','elleve','tolv'];
+    const ROUNDS_PER_LEVEL = 3;
+    const PAIRS_PER_ROUND = 3; // 3 oppgaver per runde
 
-    // Ny struktur i henhold til ønsket progresjon
     const LEVELS = [
-      { id:'hele',   name:'1. Hele timer',            gen: genHele,    timeKey:'tHelt' },
-      { id:'halve',  name:'2. Halve timer',           gen: genHalve,   timeKey:'tHalv' },
-      { id:'kvart',  name:'3. Kvart over/på',         gen: genKvart,   timeKey:'tKvart' },
-      { id:'ti',     name:'4. 10 over/på',            gen: genTi,      timeKey:'tTi' },
-      { id:'fem',    name:'5. 5 over/på',             gen: genFem,     timeKey:'tFem' },
-      { id:'tihalv', name:'6. Alle 10‑minutters varianter', gen: genTiHalv, timeKey:'tTiHalv' },
-      { id:'femhalv',name:'7. Alle 5‑minutters varianter',  gen: genFemHalv, timeKey:'tFemHalv' },
-      { id:'alle',   name:'8. Alle (blandet)',        gen: genAlle,    timeKey:'tAlle' },
+      { id:'hele', name:'Hele timer', gen: genHele },
+      { id:'halve', name:'Halve timer', gen: genHalve },
+      { id:'kvart', name:'Kvart over/på', gen: genKvart },
+      { id:'ti', name:'10 over/på', gen: genTi },
+      { id:'fem', name:'5 over/på', gen: genFem },
+      { id:'tihalv', name:'10-minutters varianter', gen: genTiHalv },
+      { id:'femhalv', name:'5-minutters varianter', gen: genFemHalv },
+      { id:'alle', name:'Alle tidspunkter', gen: genAlle },
     ];
 
     let state = {
       levelIndex: 0,
-      setsPerLevel: 6,
-      times: [], // triader i aktivt nivå
-      selected: {analog:null, digital:null, text:null},
+      currentRound: 0,
+      pairsThisRound: [],
+      selected: { analog: null, digital: null, text: null },
       solvedCount: 0,
-      timerId: null,
-      timeLeft: 0,
       progress: {},
+      interactiveClockH: 12,
+      interactiveClockM: 0,
     };
 
-    function loadSettings(){
-      const s = JSON.parse(localStorage.getItem(LS_SETTINGS) || '{}');
-      if(s.setsPerLevel) state.setsPerLevel = s.setsPerLevel;
-      const defTimes = {tHelt:60,tHalv:75,tKvart:90,tTi:90,tFem:90,tTiHalv:100,tFemHalv:100,tAlle:140};
-      state.timesCfg = Object.assign(defTimes, s.timesCfg||{});
-      // apply UI
-      $('#selSets').value = String(state.setsPerLevel);
-      $('#tHelt').value = state.timesCfg.tHelt;
-      $('#tHalv').value = state.timesCfg.tHalv;
-      $('#tKvart').value = state.timesCfg.tKvart;
-      $('#tTi').value = state.timesCfg.tTi;
-      $('#tFem').value = state.timesCfg.tFem;
-      $('#tTiHalv').value = state.timesCfg.tTiHalv;
-      $('#tFemHalv').value = state.timesCfg.tFemHalv;
-      $('#tAlle').value = state.timesCfg.tAlle;
-    }
-    function saveSettings(){
-      const s = {
-        setsPerLevel: parseInt($('#selSets').value,10),
-        timesCfg: {
-          tHelt: parseInt($('#tHelt').value,10),
-          tHalv: parseInt($('#tHalv').value,10),
-          tKvart: parseInt($('#tKvart').value,10),
-          tTi: parseInt($('#tTi').value,10),
-          tFem: parseInt($('#tFem').value,10),
-          tTiHalv: parseInt($('#tTiHalv').value,10),
-          tFemHalv: parseInt($('#tFemHalv').value,10),
-          tAlle: parseInt($('#tAlle').value,10),
-        }
-      };
-      localStorage.setItem(LS_SETTINGS, JSON.stringify(s));
-      state.setsPerLevel = s.setsPerLevel; state.timesCfg = s.timesCfg;
-    }
-
-    function loadProgress(){
+    function loadProgress() {
       const p = JSON.parse(localStorage.getItem(LS_PROGRESS) || '{}');
-      state.progress = p; // {hele:true, ...}
-    }
-    function saveProgress(){
-      localStorage.setItem(LS_PROGRESS, JSON.stringify(state.progress||{}));
+      state.progress = p;
     }
 
-    // ---------- Generering av nivåer ----------
-    function uniqueSample(arr, n){
-      const a = arr.slice();
-      for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
-      return a.slice(0, Math.min(n, a.length));
+    function saveProgress() {
+      localStorage.setItem(LS_PROGRESS, JSON.stringify(state.progress || {}));
     }
-    function nextHour(h){ return h===12?1:h+1; }
 
-    function timeToText(h,m){
+    // ---------- Klokke-tekstfunksjoner ----------
+    function nextHour(h) { return h === 12 ? 1 : h + 1; }
+
+    function timeToText(h, m) {
       const hw = HOURS_WORD[h];
       const nx = HOURS_WORD[nextHour(h)];
-      switch(m){
-        case 0:  return `Klokka er ${hw}`;
-        case 30: return `Klokka er halv ${HOURS_WORD[nextHour(h)]}`; // halv tre = 2:30
-        case 15: return `Kvart over ${hw}`;
-        case 45: return `Kvart på ${nx}`;
-        case 5:  return `Fem over ${hw}`;
-        case 55: return `Fem på ${nx}`;
-        case 10: return `Ti over ${hw}`;
-        case 50: return `Ti på ${nx}`;
-        case 20: return `Ti på halv ${nx}`;
-        case 25: return `Fem på halv ${nx}`;
-        case 35: return `Fem over halv ${nx}`;
-        case 40: return `Ti over halv ${nx}`;
-        default:
-          return `${h}:${String(m).padStart(2,'0')}`;
+      switch (m) {
+        case 0: return `${hw}`;
+        case 30: return `halv ${nx}`;
+        case 15: return `kvart over ${hw}`;
+        case 45: return `kvart på ${nx}`;
+        case 5: return `fem over ${hw}`;
+        case 55: return `fem på ${nx}`;
+        case 10: return `ti over ${hw}`;
+        case 50: return `ti på ${nx}`;
+        case 20: return `ti på halv`;
+        case 25: return `fem på halv`;
+        case 35: return `fem over halv`;
+        case 40: return `ti over halv`;
+        default: return `${h}:${String(m).padStart(2, '0')}`;
       }
     }
 
-    function timeToDigital24(h,m){
-      // Lag 24t-visning. For variasjon: tilfeldig AM/PM for 1..11; for h=12 brukes 00 eller 12.
-      // Dette er forhåndsberegnet per triade, så matching forblir entydig.
-      let usePM = Math.random() < 0.5; // 50/50 morg./etterm.
-      let hh;
-      if(h===12){ hh = usePM ? 12 : 0; }
-      else { hh = usePM ? (h+12) : h; }
-      const label = `${String(hh).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+    function timeToDigital(h, m) {
+      let hh = h, label;
+      if (Math.random() < 0.5) hh = (hh === 12) ? 0 : hh + 12;
+      label = `${String(hh).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
       return label;
     }
 
-    function makeTriad(h, m){
-      // Normaliser timer til 1..12 for analog/tekst
-      h = ((h-1)%12)+1;
-      const id = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
-      return { id, h, m, text: timeToText(h,m), digital: timeToDigital24(h,m)};
+    function makeTriad(h, m) {
+      h = ((h - 1) % 12) + 1;
+      const id = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+      return { id, h, m, text: timeToText(h, m), digital: timeToDigital(h, m) };
     }
 
-    function genHele(n){ const base=[]; for(let h=1; h<=12; h++) base.push(makeTriad(h,0)); return uniqueSample(base, n); }
-    function genHalve(n){ const base=[]; for(let h=1; h<=12; h++) base.push(makeTriad(h,30)); return uniqueSample(base, n); }
-    function genKvart(n){ const base=[]; for(let h=1; h<=12; h++){ base.push(makeTriad(h,15)); base.push(makeTriad(h,45)); } return uniqueSample(base, n); }
-    function genTi(n){ const base=[]; for(let h=1; h<=12; h++){ base.push(makeTriad(h,10)); base.push(makeTriad(h,50)); } return uniqueSample(base, n); }
-    function genFem(n){ const base=[]; for(let h=1; h<=12; h++){ base.push(makeTriad(h,5)); base.push(makeTriad(h,55)); } return uniqueSample(base, n); }
-    function genTiHalv(n){ const mins=[10,20,40,50]; const base=[]; for(let h=1; h<=12; h++){ for(const m of mins) base.push(makeTriad(h,m)); } return uniqueSample(base, n); }
-    function genFemHalv(n){ const mins=[5,25,35,55]; const base=[]; for(let h=1; h<=12; h++){ for(const m of mins) base.push(makeTriad(h,m)); } return uniqueSample(base, n); }
-    function genAlle(n){ const mins=[0,5,10,15,20,25,30,35,40,45,50,55]; const base=[]; for(let h=1; h<=12; h++){ for(const m of mins) base.push(makeTriad(h,m)); } return uniqueSample(base, n); }
+    function genHele(n) { const base = []; for (let h = 1; h <= 12; h++) base.push(makeTriad(h, 0)); return uniqueSample(base, n); }
+    function genHalve(n) { const base = []; for (let h = 1; h <= 12; h++) base.push(makeTriad(h, 30)); return uniqueSample(base, n); }
+    function genKvart(n) { const base = []; for (let h = 1; h <= 12; h++) { base.push(makeTriad(h, 15)); base.push(makeTriad(h, 45)); } return uniqueSample(base, n); }
+    function genTi(n) { const base = []; for (let h = 1; h <= 12; h++) { base.push(makeTriad(h, 10)); base.push(makeTriad(h, 50)); } return uniqueSample(base, n); }
+    function genFem(n) { const base = []; for (let h = 1; h <= 12; h++) { base.push(makeTriad(h, 5)); base.push(makeTriad(h, 55)); } return uniqueSample(base, n); }
+    function genTiHalv(n) { const mins = [10, 20, 40, 50]; const base = []; for (let h = 1; h <= 12; h++) { for (const m of mins) base.push(makeTriad(h, m)); } return uniqueSample(base, n); }
+    function genFemHalv(n) { const mins = [5, 25, 35, 55]; const base = []; for (let h = 1; h <= 12; h++) { for (const m of mins) base.push(makeTriad(h, m)); } return uniqueSample(base, n); }
+    function genAlle(n) { const mins = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]; const base = []; for (let h = 1; h <= 12; h++) { for (const m of mins) base.push(makeTriad(h, m)); } return uniqueSample(base, n); }
+
+    function uniqueSample(arr, n) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+      return a.slice(0, Math.min(n, a.length));
+    }
 
     // ---------- Tegn analog klokke ----------
-    function drawClock(canvas, h, m){
+    function drawClock(canvas, h, m) {
       const ctx = canvas.getContext('2d');
-      const W = canvas.width, H = canvas.height; const r = Math.min(W,H)/2 - 6; // radius
-      ctx.clearRect(0,0,W,H);
+      const W = canvas.width, H = canvas.height;
+      const r = Math.min(W, H) / 2 - 4;
+      ctx.clearRect(0, 0, W, H);
       ctx.save();
-      ctx.translate(W/2, H/2);
+      ctx.translate(W / 2, H / 2);
+      
       // face
-      ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fillStyle = '#0a1220'; ctx.fill();
-      ctx.lineWidth=3; ctx.strokeStyle = '#334155'; ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.fillStyle = '#FAFBFC';
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#004E89';
+      ctx.stroke();
+      
       // ticks
-      for(let i=0;i<60;i++){
-        const ang = (i/60)*Math.PI*2;
-        const len = (i%5===0)?10:5; ctx.beginPath();
-        ctx.strokeStyle = (i%5===0)?'#e2e8f0':'#64748b'; ctx.lineWidth = (i%5===0)?2:1;
-        ctx.moveTo((r-14)*Math.cos(ang), (r-14)*Math.sin(ang));
-        ctx.lineTo((r-14-len)*Math.cos(ang), (r-14-len)*Math.sin(ang));
+      for (let i = 0; i < 60; i++) {
+        const ang = (i / 60) * Math.PI * 2;
+        const len = (i % 5 === 0) ? 10 : 5;
+        ctx.beginPath();
+        ctx.strokeStyle = (i % 5 === 0) ? '#004E89' : '#B8BACA';
+        ctx.lineWidth = (i % 5 === 0) ? 2.5 : 1;
+        ctx.moveTo((r - 12) * Math.cos(ang), (r - 12) * Math.sin(ang));
+        ctx.lineTo((r - 12 - len) * Math.cos(ang), (r - 12 - len) * Math.sin(ang));
         ctx.stroke();
       }
+      
       // numbers 12,3,6,9
-      ctx.fillStyle = '#93c5fd'; ctx.font = 'bold 14px system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
-      const marks = [[0,'12'],[3,'3'],[6,'6'],[9,'9']];
-      for(const [pos,txt] of marks){
-        const ang=(pos/12)*Math.PI*2 - Math.PI/2; const rr=r-28;
-        ctx.fillText(txt, rr*Math.cos(ang), rr*Math.sin(ang));
+      ctx.fillStyle = '#004E89';
+      ctx.font = 'bold 14px "Segoe UI", system-ui';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const marks = [[0, '12'], [3, '3'], [6, '6'], [9, '9']];
+      for (const [pos, txt] of marks) {
+        const ang = (pos / 12) * Math.PI * 2 - Math.PI / 2;
+        const rr = r - 24;
+        ctx.fillText(txt, rr * Math.cos(ang), rr * Math.sin(ang));
       }
+      
       // hands
-      const mh = (m/60)*Math.PI*2 - Math.PI/2;
-      const hh = ((h%12)/12 + m/720)*Math.PI*2 - Math.PI/2;
+      const mh = (m / 60) * Math.PI * 2 - Math.PI / 2;
+      const hh = ((h % 12) / 12 + m / 720) * Math.PI * 2 - Math.PI / 2;
+      
       // hour hand
-      ctx.strokeStyle='#e5e7eb'; ctx.lineCap='round'; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo((r-44)*Math.cos(hh), (r-44)*Math.sin(hh)); ctx.stroke();
+      ctx.strokeStyle = '#004E89';
+      ctx.lineCap = 'round';
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo((r - 32) * Math.cos(hh), (r - 32) * Math.sin(hh));
+      ctx.stroke();
+      
       // minute hand
-      ctx.strokeStyle='#60a5fa'; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo((r-22)*Math.cos(mh), (r-22)*Math.sin(mh)); ctx.stroke();
+      ctx.strokeStyle = '#FF6B35';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo((r - 18) * Math.cos(mh), (r - 18) * Math.sin(mh));
+      ctx.stroke();
+      
       // center
-      ctx.beginPath(); ctx.arc(0,0,4,0,Math.PI*2); ctx.fillStyle='#22c55e'; ctx.fill();
+      ctx.beginPath();
+      ctx.arc(0, 0, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#004E89';
+      ctx.fill();
+      
+      ctx.restore();
+    }
+
+    function drawSmallClock(canvas, h, m) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      const r = Math.min(canvas.width, canvas.height) / 2 - 2;
+      
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.fillStyle = '#FAFBFC';
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#004E89';
+      ctx.stroke();
+      
+      // minute markers
+      for (let i = 0; i < 60; i++) {
+        const ang = (i / 60) * Math.PI * 2;
+        const len = (i % 5 === 0) ? 3 : 1.5;
+        ctx.beginPath();
+        ctx.strokeStyle = (i % 5 === 0) ? '#004E89' : '#D0D0D0';
+        ctx.lineWidth = (i % 5 === 0) ? 1 : 0.5;
+        ctx.moveTo((r - 3) * Math.cos(ang), (r - 3) * Math.sin(ang));
+        ctx.lineTo((r - 3 - len) * Math.cos(ang), (r - 3 - len) * Math.sin(ang));
+        ctx.stroke();
+      }
+      
+      // tall 12, 3, 6, 9
+      ctx.fillStyle = '#004E89';
+      ctx.font = 'bold 8px "Segoe UI", system-ui';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const marks = [[0, '12'], [3, '3'], [6, '6'], [9, '9']];
+      for (const [pos, txt] of marks) {
+        const ang = (pos / 12) * Math.PI * 2 - Math.PI / 2;
+        const rr = r - 10;
+        ctx.fillText(txt, rr * Math.cos(ang), rr * Math.sin(ang));
+      }
+      
+      const mh = (m / 60) * Math.PI * 2 - Math.PI / 2;
+      const hh = ((h % 12) / 12 + m / 720) * Math.PI * 2 - Math.PI / 2;
+      
+      ctx.strokeStyle = '#004E89';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo((r - 10) * Math.cos(hh), (r - 10) * Math.sin(hh));
+      ctx.stroke();
+      
+      ctx.strokeStyle = '#FF6B35';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo((r - 6) * Math.cos(mh), (r - 6) * Math.sin(mh));
+      ctx.stroke();
+      
+      ctx.beginPath();
+      ctx.arc(0, 0, 1, 0, Math.PI * 2);
+      ctx.fillStyle = '#004E89';
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawInteractiveClock(canvas, h, m) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      const r = Math.min(canvas.width, canvas.height) / 2 - 3;
+      
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.fillStyle = '#FAFBFC';
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#004E89';
+      ctx.stroke();
+      
+      // minute markers på utsiden
+      for (let i = 0; i < 60; i++) {
+        const ang = (i / 60) * Math.PI * 2;
+        const len = (i % 5 === 0) ? 5 : 2.5;
+        ctx.beginPath();
+        ctx.strokeStyle = (i % 5 === 0) ? '#004E89' : '#D0D0D0';
+        ctx.lineWidth = (i % 5 === 0) ? 1.5 : 0.5;
+        ctx.moveTo((r - 5) * Math.cos(ang), (r - 5) * Math.sin(ang));
+        ctx.lineTo((r - 5 - len) * Math.cos(ang), (r - 5 - len) * Math.sin(ang));
+        ctx.stroke();
+      }
+      
+      // alle timer 1-12 rundt klokken
+      ctx.fillStyle = '#004E89';
+      ctx.font = 'bold 10px "Segoe UI", system-ui';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      for (let i = 1; i <= 12; i++) {
+        const ang = (i / 12) * Math.PI * 2 - Math.PI / 2;
+        const rr = r - 15;
+        ctx.fillText(String(i), rr * Math.cos(ang), rr * Math.sin(ang));
+      }
+      
+      // minute numbers på utsiden (5, 10, 15, osv)
+      ctx.fillStyle = '#666666';
+      ctx.font = 'bold 7px "Segoe UI", system-ui';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      for (let i = 5; i < 60; i += 5) {
+        const ang = (i / 60) * Math.PI * 2 - Math.PI / 2;
+        const rr = r + 2;
+        ctx.fillText(String(i), rr * Math.cos(ang), rr * Math.sin(ang));
+      }
+      
+      const mh = (m / 60) * Math.PI * 2 - Math.PI / 2;
+      const hh = ((h % 12) / 12 + m / 720) * Math.PI * 2 - Math.PI / 2;
+      
+      // hour hand
+      ctx.strokeStyle = '#004E89';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo((r - 12) * Math.cos(hh), (r - 12) * Math.sin(hh));
+      ctx.stroke();
+      
+      // minute hand
+      ctx.strokeStyle = '#FF6B35';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo((r - 7) * Math.cos(mh), (r - 7) * Math.sin(mh));
+      ctx.stroke();
+      
+      // center
+      ctx.beginPath();
+      ctx.arc(0, 0, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#004E89';
+      ctx.fill();
       ctx.restore();
     }
 
     // ---------- Meny ----------
-    function buildMenu(){
+    function buildMenu() {
       const container = document.getElementById('levelMenu');
       container.innerHTML = '';
-      LEVELS.forEach((lv, idx)=>{
-        const card = document.createElement('div'); card.className='menu-card'; card.textContent = lv.name;
-        const unlocked = (idx===0) || (state.progress && state.progress[LEVELS[idx-1].id]);
+      LEVELS.forEach((lv, idx) => {
+        const card = document.createElement('div');
+        card.className = 'menu-card';
+        const unlocked = (idx === 0) || (state.progress && state.progress[LEVELS[idx - 1].id]);
         const completed = state.progress && state.progress[lv.id];
-        if(completed) card.classList.add('completed');
-        if(!unlocked){ card.classList.add('locked'); }
-        else{
-          card.addEventListener('click', ()=>{ state.levelIndex = idx; startLevel(); showGame(); });
+        
+        // Legg til liten klokke-canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = 80;
+        canvas.height = 80;
+        
+        if (lv.id === 'hele') drawSmallClock(canvas, 3, 0);
+        else if (lv.id === 'halve') drawSmallClock(canvas, 2, 30);
+        else if (lv.id === 'kvart') drawSmallClock(canvas, 3, 15);
+        else if (lv.id === 'ti') drawSmallClock(canvas, 3, 10);
+        else if (lv.id === 'fem') drawSmallClock(canvas, 3, 5);
+        else drawSmallClock(canvas, 3, 0);
+        
+        card.appendChild(canvas);
+        const textDiv = document.createElement('div');
+        textDiv.textContent = lv.name;
+        card.appendChild(textDiv);
+        
+        if (completed) card.classList.add('completed');
+        if (!unlocked) {
+          card.classList.add('locked');
+        } else {
+          card.addEventListener('click', () => { state.levelIndex = idx; startLevel(); showGame(); });
         }
         container.appendChild(card);
       });
     }
-    function showMenu(){ $('#menuScreen').style.display='flex'; $('#game').style.display='none'; }
-    function showGame(){ $('#menuScreen').style.display='none'; $('#game').style.display='flex'; }
+
+    function showMenu() { $('#menuScreen').style.display = 'flex'; $('#game').style.display = 'none'; }
+    function showGame() { $('#menuScreen').style.display = 'none'; $('#game').style.display = 'flex'; }
 
     // ---------- Spillflyt ----------
-    function startLevel(){
-      clearInterval(state.timerId); state.timerId=null;
-      state.selected={analog:null,digital:null,text:null};
-      const level = LEVELS[state.levelIndex];
-      const n = state.setsPerLevel;
-      state.times = level.gen(n);
-      state.solvedCount = 0;
-      $('#progressCount').textContent = '0';
-      $('#progressTotal').textContent = String(state.times.length);
-      $('#btnNext').disabled = (state.levelIndex>=LEVELS.length-1);
-      renderBoard();
-      const secs = state.timesCfg[level.timeKey] || 60;
-      startTimer(secs);
+    function startLevel() {
+      state.currentRound = 0;
+      startRound();
     }
 
-    function renderBoard(){
+    function startRound() {
+      state.selected = { analog: null, digital: null, text: null };
+      const level = LEVELS[state.levelIndex];
+      state.pairsThisRound = level.gen(PAIRS_PER_ROUND);
+      state.solvedCount = 0;
+      
+      $('#progressCount').textContent = '0';
+      $('#progressTotal').textContent = String(state.pairsThisRound.length);
+      $('#roundIndicator').textContent = `Runde ${state.currentRound + 1}/${ROUNDS_PER_LEVEL}`;
+      
+      renderBoard();
+    }
+
+    function renderBoard() {
       const analog = document.getElementById('colAnalog');
       const digital = document.getElementById('colDigital');
       const text = document.getElementById('colText');
       analog.innerHTML = digital.innerHTML = text.innerHTML = '';
 
-      const A = shuffle(state.times.map(t=>({type:'analog', ...t})));
-      const D = shuffle(state.times.map(t=>({type:'digital', ...t})));
-      const T = shuffle(state.times.map(t=>({type:'text', ...t})));
+      const A = shuffle(state.pairsThisRound.map(t => ({ type: 'analog', ...t })));
+      const D = shuffle(state.pairsThisRound.map(t => ({ type: 'digital', ...t })));
+      const T = shuffle(state.pairsThisRound.map(t => ({ type: 'text', ...t })));
 
-      A.forEach(item=> analog.appendChild(makeCard(item)) );
-      D.forEach(item=> digital.appendChild(makeCard(item)) );
-      T.forEach(item=> text.appendChild(makeCard(item)) );
+      A.forEach(item => analog.appendChild(makeCard(item)));
+      D.forEach(item => digital.appendChild(makeCard(item)));
+      T.forEach(item => text.appendChild(makeCard(item)));
     }
 
-    function makeCard(item){
-      const el = document.createElement('div'); el.className='card'; el.tabIndex=0; el.dataset.id=item.id; el.dataset.type=item.type;
-      if(item.type==='analog'){
-        const c = document.createElement('canvas'); c.width=140; c.height=140; el.appendChild(c);
+    function makeCard(item) {
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.tabIndex = 0;
+      el.dataset.id = item.id;
+      el.dataset.type = item.type;
+      
+      if (item.type === 'analog') {
+        const c = document.createElement('canvas');
+        c.width = 100;
+        c.height = 100;
+        el.appendChild(c);
         drawClock(c, item.h, item.m);
-      } else if(item.type==='digital'){
-        const span=document.createElement('div'); span.className='label'; span.textContent = item.digital; el.appendChild(span);
+      } else if (item.type === 'digital') {
+        const span = document.createElement('div');
+        span.className = 'label';
+        span.textContent = item.digital;
+        el.appendChild(span);
       } else {
-        const span=document.createElement('div'); span.className='label'; span.textContent = item.text; el.appendChild(span);
+        const span = document.createElement('div');
+        span.className = 'label';
+        span.textContent = item.text;
+        el.appendChild(span);
       }
 
-      el.addEventListener('click', ()=> toggleSelect(el));
-      el.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); toggleSelect(el); }});
+      el.addEventListener('click', () => toggleSelect(el));
+      el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSelect(el); } });
       return el;
     }
 
-    function toggleSelect(el){
-      if(el.classList.contains('correct')) return;
+    function toggleSelect(el) {
+      if (el.classList.contains('correct')) return;
       const type = el.dataset.type;
-      // deselect previous of same type
-      $$(`.card.selected[data-type="${type}"]`).forEach(x=> x.classList.remove('selected'));
-      if(state.selected[type]===el){ state.selected[type]=null; el.classList.remove('selected'); return; }
-      el.classList.add('selected'); state.selected[type]=el;
-      maybeCheckTrio();
+      $$(`.card.selected[data-type="${type}"]`).forEach(x => x.classList.remove('selected'));
+      if (state.selected[type] === el) { state.selected[type] = null; el.classList.remove('selected'); return; }
+      el.classList.add('selected');
+      state.selected[type] = el;
+      maybeCheckTriad();
     }
 
-    function maybeCheckTrio(){
-      const {analog,digital,text} = state.selected;
-      if(!analog || !digital || !text) return;
-      const a=analog.dataset.id, d=digital.dataset.id, t=text.dataset.id;
-      if(a===d && d===t){ // correct
-        [analog,digital,text].forEach(el=>{ el.classList.remove('selected'); el.classList.add('correct'); el.setAttribute('aria-disabled','true'); el.style.pointerEvents='none'; });
-        state.selected={analog:null,digital:null,text:null};
-        state.solvedCount++; $('#progressCount').textContent = String(state.solvedCount);
-        if(state.solvedCount===state.times.length){ onLevelSolved(); }
+    function maybeCheckTriad() {
+      const { analog, digital, text } = state.selected;
+      if (!analog || !digital || !text) return;
+      const a = analog.dataset.id, d = digital.dataset.id, t = text.dataset.id;
+      if (a === d && d === t) { // correct
+        [analog, digital, text].forEach(el => { el.classList.remove('selected'); el.classList.add('correct'); el.setAttribute('aria-disabled', 'true'); el.style.pointerEvents = 'none'; });
+        state.selected = { analog: null, digital: null, text: null };
+        state.solvedCount++;
+        $('#progressCount').textContent = String(state.solvedCount);
+        if (state.solvedCount === state.pairsThisRound.length) {
+          onRoundSolved();
+        }
       } else {
-        [analog,digital,text].forEach(el=>{ el.classList.add('wrong'); setTimeout(()=>el.classList.remove('wrong'), 350); el.classList.remove('selected'); });
-        state.selected={analog:null,digital:null,text:null};
+        // Feil svar - nullstill alt etter kort delay
+        [analog, digital, text].forEach(el => { el.classList.add('wrong'); });
+        setTimeout(() => {
+          [analog, digital, text].forEach(el => { el.classList.remove('wrong'); el.classList.remove('selected'); });
+          state.selected = { analog: null, digital: null, text: null };
+        }, 350);
       }
     }
 
-    function onLevelSolved(){
-      clearInterval(state.timerId); state.timerId=null; $('#timer').textContent='✅';
+    function onRoundSolved() {
+      state.currentRound++;
+      if (state.currentRound >= ROUNDS_PER_LEVEL) {
+        onLevelSolved();
+      } else {
+        setTimeout(() => startRound(), 800);
+      }
+    }
+
+    function onLevelSolved() {
       const lv = LEVELS[state.levelIndex];
-      state.progress = state.progress || {}; state.progress[lv.id]=true; saveProgress();
+      state.progress = state.progress || {};
+      state.progress[lv.id] = true;
+      saveProgress();
       buildMenu();
-      // liten feiring
-      document.body.style.boxShadow='inset 0 0 0 9999px rgba(34,197,94,.15)'; setTimeout(()=> document.body.style.boxShadow='none', 350);
+      showMenu();
     }
 
-    function startTimer(secs){
-      state.timeLeft = secs; updateTimerLabel();
-      state.timerId = setInterval(()=>{
-        state.timeLeft--; updateTimerLabel();
-        if(state.timeLeft<=0){ clearInterval(state.timerId); state.timerId=null; timeOut(); }
-      }, 1000);
-    }
-
-    function updateTimerLabel(){
-      const m = Math.floor(state.timeLeft/60).toString().padStart(2,'0');
-      const s = (state.timeLeft%60).toString().padStart(2,'0');
-      $('#timer').textContent = `${m}:${s}`;
-      if(state.timeLeft<=10) $('#timer').style.color = 'var(--warn)'; else $('#timer').style.color='var(--text)';
-    }
-
-    function timeOut(){
-      $$('.card').forEach(el=> el.style.pointerEvents='none');
-      $('#timer').textContent = '⏳ Tiden er ute';
-      document.body.style.animation='shake .3s'; setTimeout(()=> document.body.style.animation='none', 400);
-    }
-
-    function shuffle(arr){
+    function shuffle(arr) {
       const a = arr.slice();
-      for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+      for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
       return a;
     }
 
-    // ---------- Eventer ----------
-    document.getElementById('btnStart').addEventListener('click', startLevel);
-    document.getElementById('btnNext').addEventListener('click', ()=>{ if(state.levelIndex<LEVELS.length-1){ state.levelIndex++; startLevel(); } });
-    document.getElementById('btnBackMenu').addEventListener('click', ()=>{ clearInterval(state.timerId); state.timerId=null; showMenu(); });
+    // ---------- Interaktiv klokke på meny ----------
+    function drawInteractiveClockDisplay() {
+      const canvas = document.getElementById('interactiveClock');
+      if (!canvas) return;
+      drawInteractiveClock(canvas, state.interactiveClockH, state.interactiveClockM);
+      $('#clockTime').textContent = `${state.interactiveClockH.toString().padStart(2, '0')}:${state.interactiveClockM.toString().padStart(2, '0')}`;
+    }
 
-    document.getElementById('btnResetProgress').addEventListener('click', ()=>{
-      if(confirm('Slette lagret progresjon på denne enheten?')){
-        localStorage.removeItem(LS_PROGRESS); loadProgress(); buildMenu(); showMenu();
+    document.getElementById('btnClockMinus').addEventListener('click', () => {
+      state.interactiveClockM -= 5;
+      if (state.interactiveClockM < 0) {
+        state.interactiveClockM = 55;
+        state.interactiveClockH--;
+        if (state.interactiveClockH < 1) state.interactiveClockH = 12;
       }
+      drawInteractiveClockDisplay();
     });
 
-    // Settings modal
-    const backdrop = document.getElementById('backdrop');
-    document.getElementById('btnSettings').addEventListener('click', ()=> backdrop.style.display='flex');
-    document.getElementById('btnClose').addEventListener('click', ()=> backdrop.style.display='none');
-    document.getElementById('btnSave').addEventListener('click', ()=>{ saveSettings(); backdrop.style.display='none'; startLevel(); });
+    document.getElementById('btnClockPlus').addEventListener('click', () => {
+      state.interactiveClockM += 5;
+      if (state.interactiveClockM > 55) {
+        state.interactiveClockM = 0;
+        state.interactiveClockH++;
+        if (state.interactiveClockH > 12) state.interactiveClockH = 1;
+      }
+      drawInteractiveClockDisplay();
+    });
+
+    // ---------- Eventer ----------
+    document.getElementById('btnStart').addEventListener('click', startRound);
+    document.getElementById('btnBackMenu').addEventListener('click', () => { showMenu(); });
 
     // ---------- Oppstart ----------
-    (function init(){
-      loadSettings();
+    (function init() {
       loadProgress();
       buildMenu();
       showMenu();
+      drawInteractiveClockDisplay();
     })();
   </script>
 </body>
