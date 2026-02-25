@@ -177,7 +177,11 @@
       { id:'fem', name:'5 over/på', gen: genFem },
       { id:'tihalv', name:'10-minutters varianter', gen: genTiHalv },
       { id:'femhalv', name:'5-minutters varianter', gen: genFemHalv },
-      { id:'alle', name:'Alle tidspunkter', gen: genAlle },
+      { id:'rep1', name:'Repetisjon 1 (alt hittil)', gen: genRepetisjon },
+      { id:'rep2', name:'Repetisjon 2 (alt hittil)', gen: genRepetisjon },
+      { id:'min1', name:'Minutter nivå 1', gen: genMinutterNiva1 },
+      { id:'min2', name:'Minutter nivå 2', gen: genMinutterNiva2 },
+      { id:'min3', name:'Minutter nivå 3', gen: genMinutterNiva3 },
     ];
 
     let state = {
@@ -252,6 +256,10 @@
     function genFem(n) { const base = []; for (let h = 1; h <= 12; h++) { base.push(makeTriad(h, 5)); base.push(makeTriad(h, 55)); } return uniqueSample(base, n); }
     function genTiHalv(n) { const mins = [10, 20, 40, 50]; const base = []; for (let h = 1; h <= 12; h++) { for (const m of mins) base.push(makeTriad(h, m)); } return uniqueSample(base, n); }
     function genFemHalv(n) { const mins = [5, 25, 35, 55]; const base = []; for (let h = 1; h <= 12; h++) { for (const m of mins) base.push(makeTriad(h, m)); } return uniqueSample(base, n); }
+    function genRepetisjon(n) { const mins = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]; const base = []; for (let h = 1; h <= 12; h++) { for (const m of mins) base.push(makeTriad(h, m)); } return uniqueSample(base, n); }
+    function genMinutterNiva1(n) { const mins = [1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14]; const base = []; for (let h = 1; h <= 12; h++) { for (const m of mins) base.push(makeTriad(h, m)); } return uniqueSample(base, n); }
+    function genMinutterNiva2(n) { const mins = [16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29]; const base = []; for (let h = 1; h <= 12; h++) { for (const m of mins) base.push(makeTriad(h, m)); } return uniqueSample(base, n); }
+    function genMinutterNiva3(n) { const mins = [31, 32, 33, 34, 36, 37, 38, 39, 41, 42, 43, 44, 46, 47, 48, 49, 51, 52, 53, 54, 56, 57, 58, 59]; const base = []; for (let h = 1; h <= 12; h++) { for (const m of mins) base.push(makeTriad(h, m)); } return uniqueSample(base, n); }
     function genAlle(n) { const mins = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]; const base = []; for (let h = 1; h <= 12; h++) { for (const m of mins) base.push(makeTriad(h, m)); } return uniqueSample(base, n); }
 
     function uniqueSample(arr, n) {
@@ -493,6 +501,10 @@
         else if (lv.id === 'kvart') drawSmallClock(canvas, 3, 15);
         else if (lv.id === 'ti') drawSmallClock(canvas, 3, 10);
         else if (lv.id === 'fem') drawSmallClock(canvas, 3, 5);
+        else if (lv.id === 'rep1' || lv.id === 'rep2') drawSmallClock(canvas, 3, 25);
+        else if (lv.id === 'min1') drawSmallClock(canvas, 3, 7);
+        else if (lv.id === 'min2') drawSmallClock(canvas, 3, 22);
+        else if (lv.id === 'min3') drawSmallClock(canvas, 3, 47);
         else drawSmallClock(canvas, 3, 0);
         
         card.appendChild(canvas);
